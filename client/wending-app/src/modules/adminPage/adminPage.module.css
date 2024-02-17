@@ -1,0 +1,43 @@
+.DrinksBlock {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+table th,
+table td {
+	border: 1px solid #ccc;
+	padding: 8px;
+}
+
+table th {
+	background-color: #f5f5f5;
+}
+
+table td {
+	text-align: center;
+}
+
+input {
+	width: 100%;
+	padding: 6px;
+	box-sizing: border-box;
+}
+
+button {
+	padding: 8px 12px;
+	cursor: pointer;
+	background-color: #007bff;
+	color: #fff;
+	border: none;
+	border-radius: 4px;
+}
+
+button:hover {
+	background-color: #0056b3;
+}
