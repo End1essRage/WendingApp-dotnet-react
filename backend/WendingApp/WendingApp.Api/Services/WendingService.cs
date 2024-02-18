@@ -22,6 +22,7 @@ namespace WendingApp.Api.Services
             _drinksRepository = drinksRepository;
             _cashRepository = cashRepository;
         }
+
         public async Task<IEnumerable<int>> GetUnBlockedNominals()
         {
             return await _cashRepository.GetCoinsAsync(c => !c.CashInBlocked);
@@ -66,8 +67,6 @@ namespace WendingApp.Api.Services
             }
 
             //Format Response
-            //List<CoinDto> coinsResponse = new List<CoinDto>();
-
             foreach(var coin in changeCoins)
             {
                 Console.WriteLine($"--> change coin - \n: Nominal: {coin.Key} | Count: {coin.Value}");

@@ -1,11 +1,10 @@
-import { MouseEventHandler, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
-import { WendingRequest, addCoin, addDrink, executeWending, fillGoods, getNominals } from "../../redux/wendingSlice";
-import { DrinkItem } from "./drinksBlock/drinkItem";
+import { addCoin, executeWending, } from "../../redux/wendingSlice";
 import s from "./wendingPage.module.css";
 import { CoinItem } from "./coinItem";
 import { DrinksBlock } from "./drinksBlock/drinksBlock";
+import { WendingRequest } from "../../types";
 
 export const WendingPage = () => {
 
@@ -51,6 +50,7 @@ export const WendingPage = () => {
 						onClickHandler={() => onCoinClick(el.nominal)} />)}
 					<button onClick={applyWending}>Apply</button>
 				</div>
+				<p>Сдача:</p>
 				<div className={s.CoinsBlock}>
 					{changeCoins.map((el) => <CoinItem nominal={el.nominal}
 						count={el.count}

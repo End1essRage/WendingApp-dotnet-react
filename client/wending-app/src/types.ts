@@ -27,3 +27,13 @@ export interface UploadImageDto {
 	id: number,
 	image: File
 }
+
+export interface WendingRequest {
+	drinks: { [key: number]: number };
+	coins: { [key: number]: number };
+}
+
+export interface WendingResponse {
+	coins: Array<Coin>;
+	debt: number;
+}

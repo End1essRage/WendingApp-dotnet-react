@@ -1,26 +1,9 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "../api/api";
 import { STATUS_BLANK, STATUS_FULLFILLED, STATUS_PENDING, STATUS_REJECTED } from "../constants/statuses";
-import { Collection } from "typescript";
-import { Coin, Drink } from "../types";
+import { Coin, Drink, WendingRequest, WendingResponse } from "../types";
 
-interface WendingState {
-	status: string,
-	error: string,
-	cart: Array<CartPosition>,
-	coins: Array<Coin>,
-	goods: Array<Drink>,
-	changeCoins: Array<Coin>,
-	debt: number
-}
-export interface WendingRequest {
-	drinks: { [key: number]: number };
-	coins: { [key: number]: number };
-}
-export interface WendingResponse {
-	coins: Array<Coin>;
-	debt: number;
-}
+
 
 export const fillGoods = createAsyncThunk(
 	'wending/fillGoods',
@@ -126,6 +109,17 @@ const initialState: WendingState = {
 	changeCoins: new Array<Coin>(),
 	debt: 0
 }
+
+interface WendingState {
+	status: string,
+	error: string,
+	cart: Array<CartPosition>,
+	coins: Array<Coin>,
+	goods: Array<Drink>,
+	changeCoins: Array<Coin>,
+	debt: number
+}
+
 
 export const wendingSlice = createSlice({
 	name: 'wending',
