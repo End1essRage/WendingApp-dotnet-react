@@ -5,11 +5,6 @@ using WendingApp.Data.Access;
 
 var builder = WebApplication.CreateBuilder(args);
 
-/* FOR MIGRATIONS
-  builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseNpgsql(connectionString, b => b.MigrationsAssembly("WendingApp.Data")));
- */
-
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddDbContext<AppDbContext>(options =>
@@ -19,7 +14,7 @@ else
 {
     string connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
     builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseNpgsql(connectionString, b => b.MigrationsAssembly("WendingApp.Data")));
+        options.UseNpgsql(connectionString, b => b.MigrationsAssembly("WendingApp.Api")));
 }
 
 builder.Services.AddCors(options =>
