@@ -86,6 +86,8 @@ export const DrinksTable: React.FC = () => {
 			<table>
 				<thead>
 					<tr>
+						<th>RowId</th>
+						<th>ItemId</th>
 						<th>Имя</th>
 						<th>Цена</th>
 						<th>Количество</th>
@@ -96,6 +98,12 @@ export const DrinksTable: React.FC = () => {
 				<tbody>
 					{drinksRow.map((row) => (
 						<tr key={row.id}>
+							<td>
+								{row.id}
+							</td>
+							<td>
+								{row.drink.id}
+							</td>
 							<td>
 								{editingRowId === row.id ? (
 									<input
@@ -131,10 +139,11 @@ export const DrinksTable: React.FC = () => {
 							</td>
 							<td>
 								{editingRowId === row.id ? (
-									<input
+									row.drink.id === 0 ? (<p>you can change photo after creating</p>) : (<input
 										type="file"
 										onChange={(e) => handleInputChange(row.id, 'image', e.target.files?.[0] || '')}
-									/>
+									/>)
+
 								) : (
 									<img src={`http://localhost:5136/api/wending/drinks/${row.drink.id}/img`} style={{ width: '50px', height: '50px' }} alt="Изображение" />
 								)}

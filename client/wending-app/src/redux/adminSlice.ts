@@ -99,7 +99,8 @@ export const createDrink = createAsyncThunk(
 
 			const data = await response.data;
 			console.log(data);
-			//add drink dispatch
+			dispatch(removeDrink(0));
+			dispatch(addDrink(data));
 			return data;
 		}
 		catch (error) {
