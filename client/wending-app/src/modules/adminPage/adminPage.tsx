@@ -5,15 +5,21 @@ import { useEffect } from "react";
 import { login } from "../../redux/authSlice";
 import s from "./adminPage.module.css";
 import { DrinksTable } from "./drinksTable";
-import { getDrinks } from "../../redux/adminSlice";
+import { getCash, getDrinks, updateCash } from "../../redux/adminSlice";
+import { CashBlock } from "./cashBlock";
 
 export const AdminPage = () => {
 
 	const [searchParams, setSearchParams] = useSearchParams();
 	const authKey = searchParams.get("key");
 
+	const changes = useSelector((state: RootState) => state.admin.cashChanges);
+
 	const dispatch = useDispatch<AppDispatch>();
+
 	dispatch(getDrinks());
+	dispatch(getCash());
+
 	const isAuthed = useSelector((state: RootState) => state.auth.authenticated);
 
 	useEffect(() => {
@@ -21,13 +27,19 @@ export const AdminPage = () => {
 			dispatch(login(authKey));
 	})
 
+	const handleCashSave = () => {
+		console.log(changes);
+		dispatch(updateCash(changes));
+	}
+
 	if (!isAuthed)
 		return <h1>Authentication Failed</h1>
 
 	return (
 		<>
 			<div className={s.CashBlock}>
-				<h1>CashBlock</h1>
+				<CashBlock />
+				<button onClick={handleCashSave}>Save</button>
 			</div>
 			<div className={s.DrinksBlock}>
 				<DrinksTable />

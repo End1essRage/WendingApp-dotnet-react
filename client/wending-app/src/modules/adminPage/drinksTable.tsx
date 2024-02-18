@@ -15,7 +15,6 @@ export const DrinksTable: React.FC = () => {
 	const drinks = useSelector((state: RootState) => state.admin.drinks);
 	let drinksRow = new Array<DrinkTableRow>();
 
-	//const [data, setData] = useState<DrinkTableRow[]>([]);
 	const [editingRowId, setEditingRowId] = useState<number | null>(null);
 
 	const updateRows = () => {
@@ -23,7 +22,6 @@ export const DrinksTable: React.FC = () => {
 
 		drinks.forEach(element => {
 			drinksRow.push(new DrinkTableRow(counter, element));
-			//setData([...data, { id: counter, drink: element }]);
 			counter++;
 		});
 	}

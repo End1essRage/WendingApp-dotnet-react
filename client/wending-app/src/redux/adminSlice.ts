@@ -1,18 +1,22 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "../api/api";
 import { STATUS_BLANK, STATUS_FULLFILLED, STATUS_PENDING, STATUS_REJECTED } from "../constants/statuses";
-import { Coin, Drink, DrinkCreateDto, DrinkUpdateDto, UploadImageDto } from "../types";
+import { Coin, CoinAdminReadDto, Drink, DrinkCreateDto, DrinkUpdateDto, UploadImageDto } from "../types";
 
 interface AdminState {
 	status: string,
 	error: string,
-	drinks: Array<Drink>
+	drinks: Array<Drink>,
+	cash: Array<CoinAdminReadDto>,
+	cashChanges: Array<Coin>
 }
 
 const initialState: AdminState = {
 	status: STATUS_BLANK,
 	error: '',
-	drinks: Array<Drink>()
+	drinks: Array<Drink>(),
+	cash: Array<CoinAdminReadDto>(),
+	cashChanges: Array<Coin>()
 }
 //Drinks
 export const getDrinks = createAsyncThunk(
@@ -186,7 +190,6 @@ export const uploadImage = createAsyncThunk(
 );
 
 //Cash
-//TODO
 export const getCash = createAsyncThunk(
 	'admin/getCash',
 	async (_, { rejectWithValue }) => {
@@ -214,13 +217,21 @@ export const getCash = createAsyncThunk(
 		}
 	}
 );
-//TODO
 export const updateCash = createAsyncThunk(
 	'admin/updateCash',
-	async (_, { rejectWithValue }) => {
+	async (body: Array<Coin>, { rejectWithValue }) => {
 		try {
 			// Монеты на севере прибавляются и убавляются а не перезаписываются
-			const response = await axios.get('http://localhost:5136/api/admin/cash');
+			const options = {
+				method: 'PUT',
+				url: 'http://localhost:5136/api/admin/cash',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				data: body
+			};
+
+			const response = await axios.request(options)
 
 			if (response.status === 400) {
 				throw new Error('Bad request!');
@@ -243,12 +254,11 @@ export const updateCash = createAsyncThunk(
 		}
 	}
 );
-//TODO
 export const switchCoin = createAsyncThunk(
 	'admin/switchCoin',
-	async (_, { rejectWithValue }) => {
+	async (id: number, { rejectWithValue, dispatch }) => {
 		try {
-			const response = await axios.get('http://localhost:5136/api/admin/cash');
+			const response = await axios.patch('http://localhost:5136/api/admin/cash/' + id);
 
 			if (response.status === 400) {
 				throw new Error('Bad request!');
@@ -256,7 +266,7 @@ export const switchCoin = createAsyncThunk(
 			if (response.status === 404) {
 				throw new Error('Not Found!');
 			}
-
+			dispatch(switchCoinLock(id));
 			const data = await response.data;
 
 			return data;
@@ -285,6 +295,24 @@ export const adminSlice = createSlice({
 		updateDrink(state: AdminState, action: PayloadAction<Drink>) {
 			const index = state.drinks.findIndex(d => d.id === action.payload.id);
 			state.drinks[index] = action.payload;
+		},
+		updateCoinChanges(state: AdminState, action: PayloadAction<Coin>) {
+			const index = state.cashChanges.findIndex(c => c.nominal === action.payload.nominal);
+			console.log(action.payload);
+			if (index === -1) {
+				state.cashChanges.push(action.payload);
+			}
+			else {
+				state.cashChanges[index] = action.payload;
+			}
+		},
+		switchCoinLock(state: AdminState, action: PayloadAction<number>) {
+			return {
+				...state,
+				cash: state.cash.map(item =>
+					item.nominal === action.payload ? { ...item, locked: !item.locked } : item
+				)
+			};
 		}
 	},
 	extraReducers(builder) {
@@ -318,9 +346,30 @@ export const adminSlice = createSlice({
 		builder.addCase(uploadImage.rejected, (state, action) => {
 			console.log(action.payload);
 		});
+		builder.addCase(getCash.fulfilled, (state: AdminState, action: PayloadAction<CoinAdminReadDto[]>) => {
+			state.cash = action.payload;
+			console.log(action.payload);
+		});
+		builder.addCase(getCash.rejected, (state, action) => {
+			console.log(action.payload);
+		});
+		builder.addCase(updateCash.fulfilled, (state: AdminState, action: PayloadAction<CoinAdminReadDto[]>) => {
+			console.log(action.payload);
+			state.cash = action.payload;
+			state.cashChanges = new Array<Coin>()
+		});
+		builder.addCase(updateCash.rejected, (state, action) => {
+			console.log(action.payload);
+		});
+		builder.addCase(switchCoin.fulfilled, (state, action) => {
+			console.log(action.payload);
+		});
+		builder.addCase(switchCoin.rejected, (state, action) => {
+			console.log(action.payload);
+		});
 	},
 });
 
-export const { addDrink, updateDrink, removeDrink } = adminSlice.actions;
+export const { addDrink, updateDrink, removeDrink, updateCoinChanges, switchCoinLock } = adminSlice.actions;
 
 export default adminSlice.reducer;

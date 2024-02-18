@@ -29,7 +29,7 @@ namespace WendingApp.Api.Controllers
 
         //Get all cashInfo
         [HttpGet(Name = "GetCashInfo")] // returns current status
-        public async Task<ActionResult<IEnumerable<CoinDto>>> GetCashInfo()
+        public async Task<ActionResult<IEnumerable<CoinAdminReadDto>>> GetCashInfo()
         {
             Console.WriteLine("--> Hitted GetCashInfo");
 
@@ -38,7 +38,7 @@ namespace WendingApp.Api.Controllers
 
             var coins = await _cashRepository.GetCoinsAsync();
 
-            return Ok(_mapper.Map<IEnumerable<CoinDto>>(coins));
+            return Ok(_mapper.Map<IEnumerable<CoinAdminReadDto>>(coins));
         }
 
         //Change coins amount
@@ -79,7 +79,7 @@ namespace WendingApp.Api.Controllers
 
             var coins = await _cashRepository.GetCoinsAsync();
 
-            return AcceptedAtRoute(nameof(GetCashInfo), null , _mapper.Map<IEnumerable<CoinDto>>(coins));
+            return AcceptedAtRoute(nameof(GetCashInfo), null , _mapper.Map<IEnumerable<CoinAdminReadDto>>(coins));
         }
 
         //switch blocked coin

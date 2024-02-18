@@ -1,3 +1,15 @@
+.CashBlock {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 50px;
+	background-color: rgb(161, 198, 239);
+}
+
+.CashItem {
+	padding: 2px;
+	margin: 10px;
+}
+
 .DrinksBlock {
 	display: flex;
 	flex-direction: row;

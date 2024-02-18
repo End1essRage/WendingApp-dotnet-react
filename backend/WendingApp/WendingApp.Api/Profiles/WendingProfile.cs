@@ -11,6 +11,8 @@ namespace WendingApp.Api.Profiles
             CreateMap<DrinkCreateDto, Drink>();
             CreateMap<Drink, DrinkReadDto>();
             CreateMap<Coin, CoinDto>();
+            CreateMap<Coin, CoinAdminReadDto>()
+                .ForMember(dest => dest.Locked, opt => opt.MapFrom(src => src.CashInBlocked)); ;
         }
     }
 }
