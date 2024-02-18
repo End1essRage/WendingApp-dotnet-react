@@ -87,7 +87,7 @@ namespace WendingApp.Api.Services
                 }
                 response.Coins = response.Coins.OrderBy(c => c.Nominal).ToList();
             }
-            
+            response.Debt = debt;
             return response;
         }
 

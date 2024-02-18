@@ -39,15 +39,19 @@ export const DrinksBlock = (props: DrinksBlockProps) => {
 	}
 
 	return (
-		<div className={s.DrinksBlock}>
-			{goods.map((el) => <DrinkItem key={el.id}
-				isLocked={calculateTotalMoney() < el.price}
-				id={el.id}
-				name={el.name}
-				price={el.price}
-				count={el.count}
-				inCartCount={getDrinksInCartCount(el.id)}
-				onClickHandler={() => onDrinkClick(el.id)} />)}
-		</div>
+		<>
+			<div className={s.DrinksBlock}>
+
+				{goods.map((el) => <DrinkItem key={el.id}
+					isLocked={calculateTotalMoney() < el.price}
+					id={el.id}
+					name={el.name}
+					price={el.price}
+					count={el.count}
+					inCartCount={getDrinksInCartCount(el.id)}
+					onClickHandler={() => onDrinkClick(el.id)} />)}
+			</div>
+			<p>Доступно {calculateTotalMoney()}</p>
+		</>
 	);
 }

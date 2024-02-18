@@ -10,6 +10,7 @@ interface WendingState {
 	cart: Array<CartPosition>,
 	coins: Array<Coin>,
 	goods: Array<Drink>,
+	changeCoins: Array<Coin>,
 	debt: number
 }
 export interface WendingRequest {
@@ -79,7 +80,7 @@ export const getNominals = createAsyncThunk(
 
 export const executeWending = createAsyncThunk(
 	'wending/executeWending',
-	async (request: WendingRequest, { rejectWithValue }) => {
+	async (request: WendingRequest, { rejectWithValue, dispatch }) => {
 		try {
 			const options = {
 				method: 'POST',
@@ -98,7 +99,7 @@ export const executeWending = createAsyncThunk(
 			}
 
 			const data = await response.data;
-
+			dispatch(clearCoins());
 			return data;
 		}
 		catch (error) {
@@ -122,6 +123,7 @@ const initialState: WendingState = {
 	cart: new Array<CartPosition>(),
 	coins: new Array<Coin>(),
 	goods: new Array<Drink>(),
+	changeCoins: new Array<Coin>(),
 	debt: 0
 }
 
@@ -161,6 +163,12 @@ export const wendingSlice = createSlice({
 				};
 			}
 		},
+		clearCoins(state: WendingState) {
+			return {
+				...state,
+				coins: state.coins.map(coin => ({ ...coin, count: 0 }))
+			};
+		},
 	},
 	extraReducers(builder) {
 		builder.addCase(fillGoods.fulfilled, (state, action: PayloadAction<Array<Drink>>) => {
@@ -179,9 +187,9 @@ export const wendingSlice = createSlice({
 			console.log('getNominals error : payload - ' + action.payload + ' error: ' + action.error);
 		});
 		builder.addCase(executeWending.fulfilled, (state, action: PayloadAction<WendingResponse>) => {
-			state.coins = new Array<Coin>();
 			state.cart = new Array<CartPosition>();
-			state.coins = action.payload.coins;
+			state.changeCoins = action.payload.coins;
+			console.log(action.payload)
 			state.debt = action.payload.debt;
 		});
 		builder.addCase(executeWending.rejected, (state, action) => {
@@ -190,6 +198,6 @@ export const wendingSlice = createSlice({
 	},
 });
 
-export const { addCoin, addDrink } = wendingSlice.actions;
+export const { addCoin, addDrink, clearCoins } = wendingSlice.actions;
 
 export default wendingSlice.reducer;

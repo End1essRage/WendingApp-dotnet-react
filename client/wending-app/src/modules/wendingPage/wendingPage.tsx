@@ -11,9 +11,9 @@ export const WendingPage = () => {
 
 	const dispatch = useDispatch<AppDispatch>();
 
-
-
 	const coins = useSelector((state: RootState) => state.wending.coins);
+	const changeCoins = useSelector((state: RootState) => state.wending.changeCoins);
+	const debt = useSelector((state: RootState) => state.wending.debt);
 
 	const drinkData = useSelector((state: RootState) => state.wending.cart.reduce((acc, drink) => {
 		return { ...acc, [drink.drinkId]: drink.count };
@@ -32,6 +32,10 @@ export const WendingPage = () => {
 	const onCoinClick = (nominal: number) => {
 		dispatch(addCoin(nominal));
 	}
+	const onChangeCoinClick = (nominal: number) => {
+		//clear change coins
+		//dispatch(addCoin(nominal));
+	}
 
 	const applyWending = () => {
 		dispatch(executeWending(requestData));
@@ -47,7 +51,12 @@ export const WendingPage = () => {
 						onClickHandler={() => onCoinClick(el.nominal)} />)}
 					<button onClick={applyWending}>Apply</button>
 				</div>
-
+				<div className={s.CoinsBlock}>
+					{changeCoins.map((el) => <CoinItem nominal={el.nominal}
+						count={el.count}
+						onClickHandler={() => onChangeCoinClick(el.nominal)} />)}
+					{debt > 0 ? <p>Debt is {debt}</p> : <></>}<p></p>
+				</div>
 			</div>
 		</>
 	);
